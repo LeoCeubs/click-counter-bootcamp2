@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  e2e-tests:
+    build:
+      context: .
+      target: tester
+    container_name: site-time-tracker-tests
+    network_mode: host
+    environment:
+      - CI=true
+    command: >
+      sh -c "
+        xvfb-run --auto-servernum --server-args='-screen 0 1280x960x24' \
+        sh -c 'npx http-server ./tests -p 3000 --silent & npx wait-on http://localhost:3000/test.html && npx playwright test --reporter=line'
+      "
